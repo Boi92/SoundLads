@@ -7,24 +7,98 @@ import Player from "./components/Player";
 import Song from "./components/Song";
 import Playlist from "./components/Playlist";
 import Nav from "./components/Nav";
+import data from "./data"
+
+const App = () => {
+
+	const audioRef = useRef(null);
+
+	const [songs, setSongs] = useState(data());
+	const [currentSong, setCurrentSong] = useState(songs[0]);
+	const [isPlaying, setIsPlaying] = useState(false);
+	const [playlistStatus, setPlaylistStatus] = useState(false);
+	const [songInfo, setSongInfo] = useState({
+		currentTime: 0,
+		duration: 0,
+	});
+
+	// Functions
+	const updateTimeHandler = (e) => {
+		const currentTime = e.target.currentTime;
+		const duration = e.target.duration;
+		setSongInfo({ ...songInfo, currentTime, duration });
+	};
+
+	const songEndHandler = async () => {
+		let currentIndex = songs.findIndex((song) => song.id === currentSong.id);
+		let nextSong = songs[(currentIndex + 1) % songs.length];
+	  await setCurrentSong(nextSong);
+
+		const newSongs = songs.map((song) => {
+			if (song.id === nextSong.id) {
+				return {
+					...song,
+					active: true,
+				};
+			} else {
+				return {
+					...song,
+					active: false,
+				};
+			}
+		});
+		setSongs(newSongs);
+
+		if (isPlaying) {
+			audioRef.current.play();
+		}
+	};
+
+	return (
+		<AppContainer playlistStatus={playlistStatus}>
+			<Nav playlistStatus={playlistStatus} setPlaylistStatus={setPlaylistStatus} />
+			<Song currentSong={currentSong} />
+			<Player
+				isPlaying={isPlaying}
+				setIsPlaying={setIsPlaying}
+				currentSong={currentSong}
+				setCurrentSong={setCurrentSong}
+				audioRef={audioRef}
+				songInfo={songInfo}
+				setSongInfo={setSongInfo}
+				songs={songs}
+				setSongs={setSongs}
+			/>
+      <div>HELLO WHAT HAPPENING</div>
+			<Playlist
+				songs={songs}
+				setCurrentSong={setCurrentSong}
+				audioRef={audioRef}
+				isPlaying={isPlaying}
+				setSongs={setSongs}
+				playlistStatus={playlistStatus}
+			/>
+
+			<audio
+				onLoadedMetadata={updateTimeHandler}
+				onTimeUpdate={updateTimeHandler}
+				onEnded={songEndHandler}
+				ref={audioRef}
+				src={currentSong.audio}
+			/>
+		</AppContainer>
+	);
+};
 
 
 
 
-
-function App() {
-
-  
-  return (
-    <>
-			<Nav />
-      <div>Hello World</div>
-			<Song />
-			<Player />
-			<Playlist/>
-			<audio/>
-    </>
-  );
-}
+const AppContainer = styled.div`
+	transition: all 0.5s ease;
+	margin-left: ${(p) => (p.playlistStatus ? "20rem" : "0")};
+	@media screen and (max-width: 768px) {
+		margin-left: 0;
+	}
+`;
 
 export default App;
