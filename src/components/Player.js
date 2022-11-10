@@ -1,5 +1,5 @@
 const Player = () => {
-    return (  );
+    return (  console.log('hello world'));
 }
  
 export default Player;

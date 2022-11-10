@@ -1,5 +1,5 @@
 const Song = () => {
-    return (  );
+    return (  console.log('hello world') );
 }
  
 export default Song;
