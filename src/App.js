@@ -5,7 +5,7 @@ import "./App.css";
 
 import Player from "./components/Player";
 import Song from "./components/Song";
-import Library from "./components/Library";
+import Library from "./components/Playlist";
 import Nav from "./components/Nav";
 
 
