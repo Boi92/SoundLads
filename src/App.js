@@ -5,7 +5,7 @@ import "./App.css";
 
 import Player from "./components/Player";
 import Song from "./components/Song";
-import Library from "./components/Playlist";
+import Playlist from "./components/Playlist";
 import Nav from "./components/Nav";
 
 
@@ -16,13 +16,14 @@ function App() {
 
   
   return (
-    <App>
+    <>
 			<Nav />
+      <div>Hello World</div>
 			<Song />
 			<Player />
-			<Library/>
+			<Playlist/>
 			<audio/>
-		</App>
+    </>
   );
 }
 
